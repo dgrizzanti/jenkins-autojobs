@@ -1,0 +1,137 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installation &mdash; jenkins-autojobs 0.5.0</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="jenkins-autojobs 0.5.0" href="index.html" />
+    <link rel="next" title="Git Setup" href="git.html" />
+    <link rel="prev" title="Introduction" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="git.html" title="Git Setup"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">jenkins-autojobs 0.5.0</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>The latest stable version of <tt class="xref py py-mod docutils literal"><span class="pre">jenkins-autojobs</span></tt> is available on
+<a class="reference external" href="http://pypi.python.org/pypi/jenkins-autojobs">PyPi</a>, while the development version can be installed directly from
+github:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> pip install jenkins-autojobs <span class="c"># latest stable version</span>
+<span class="gp">$</span> pip install git+git://github.com/gvalkov/jenkins-autojobs.git <span class="c"># latest development version</span>
+</pre></div>
+</div>
+<p>Alternatively, <tt class="xref py py-mod docutils literal"><span class="pre">jenkins-autojobs</span></tt> can be installed like any other
+<a class="reference external" href="http://docs.python.org/3.2/library/distutils.html#distutils" title="(in Python v3.2)"><tt class="xref py py-mod docutils literal"><span class="pre">distutils</span></tt></a>/<tt class="xref py py-mod docutils literal"><span class="pre">setuptools</span></tt>/<tt class="xref py py-mod docutils literal"><span class="pre">packaging</span></tt> package:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> git clone git@github.com:gvalkov/jenkins-autojobs.git
+<span class="gp">$</span> <span class="nb">cd  </span>jenkins-autojobs
+<span class="gp">$</span> git reset --hard HEAD <span class="nv">$versiontag</span>
+<span class="gp">$</span> python setup.py install
+</pre></div>
+</div>
+<p><tt class="xref py py-mod docutils literal"><span class="pre">jenkins-autojobs</span></tt> requires a version of <a class="reference external" href="http://lxml.de/">lxml</a> that supports XML
+canonicalization (c14n). Setup will attempt to install one if it is
+missing from your system (or if you&#8217;re in a <a class="reference external" href="http://pypi.python.org/pypi/virtualenv/">virtualenv</a> without access
+to the system&#8217;s <tt class="docutils literal"><span class="pre">site-packages</span></tt> dir). In that case, you would need to
+install the development headers for <tt class="docutils literal"><span class="pre">libxml</span></tt> and <tt class="docutils literal"><span class="pre">libxslt</span></tt>, which in
+most cases can be done with:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> apt-get install libxml2-dev libxslt1-dev
+<span class="gp">#</span> or
+<span class="gp">$</span> yum install libxslt-devev libxml-devel
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="git.html"
+                        title="next chapter">Git Setup</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/installation.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="git.html" title="Git Setup"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="index.html">jenkins-autojobs 0.5.0</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Georgi Valkov.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

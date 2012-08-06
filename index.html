@@ -1,0 +1,243 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction &mdash; jenkins-autojobs 0.5.0</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="jenkins-autojobs 0.5.0" href="#" />
+    <link rel="next" title="Installation" href="installation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">jenkins-autojobs 0.5.0</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<img alt="_images/explanation-figure.png" class="align-center" src="_images/explanation-figure.png" />
+<p><tt class="xref py py-mod docutils literal"><span class="pre">jenkins-autojobs</span></tt> are a set of scripts that automatically create
+<a class="reference external" href="http://jenkins-ci.org/">Jenkins</a> jobs from template jobs and the branches in a SCM repository.</p>
+<p>The modus operandi of <tt class="xref py py-mod docutils literal"><span class="pre">jenkins-autojobs</span></tt> is simple:</p>
+<ul class="simple">
+<li>Read configuration files.</li>
+<li>List SCM branches.</li>
+<li>Create or update jobs (jobs are updated whenever their template
+jobs change).</li>
+</ul>
+<p>In a nutshell, the configuration files specify:</p>
+<ul class="simple">
+<li>How to access Jenkins and the SCM repository.</li>
+<li>Which template job to use for which branch.</li>
+<li>Which branches to process and which to ignore (using regular expressions).</li>
+<li>How new jobs should be named.</li>
+</ul>
+<p>A non-exclusive list of other configuration options:</p>
+<ul class="simple">
+<li>The enabled/disabled state of new jobs. For example, we might want
+new jobs to inherit the state of their template jobs, but updated
+jobs to keep their most recent state.</li>
+<li>Text substitutions throughout all text elements of a job&#8217;s
+<tt class="docutils literal"><span class="pre">config.xml</span></tt>. This is useful for plugins that cannot introspect the
+name of the branch or job (eg. <a class="reference external" href="https://wiki.jenkins-ci.org/display/JENKINS/Sidebar-Link+Plugin">Sidebar-Link</a>).</li>
+</ul>
+<p>See: <a class="reference internal" href="git.html#gityamlconfig"><em>example configuration file</em></a> and <a class="reference internal" href="exampleoutput.html#exampleoutput"><em>example output</em></a></p>
+<div class="section" id="supported-scms">
+<h2>Supported SCMs<a class="headerlink" href="#supported-scms" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="34%" />
+<col width="66%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">scm</th>
+<th class="head">script</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference external" href="https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin">git</a></td>
+<td><tt class="docutils literal"><span class="pre">jenkins-makejobs-git</span></tt></td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="https://wiki.jenkins-ci.org/display/JENKINS/Subversion+Plugin">subversion</a></td>
+<td><tt class="docutils literal"><span class="pre">jenkins-makejobs-svn</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>All script accept the same command-line options and arguments:</p>
+<div class="highlight-python"><pre>Usage: jenkins-makejobs-* [-rvjnyoupUYOP] &lt;config.yaml&gt;
+
+General Options:
+  -n dry run
+  -v show version and exit
+
+Repository Options:
+  -r &lt;arg&gt; repository url
+  -y &lt;arg&gt; scm username
+  -o &lt;arg&gt; scm password
+  -Y scm username (read from stdin)
+  -P scm password (read from stdin)
+
+Jenkins Options:
+  -j &lt;arg&gt; jenkins url
+  -u &lt;arg&gt; jenkins username
+  -p &lt;arg&gt; jenkins password
+  -U jenkins username (read from stdin)
+  -P jenkins password (read from stdin)</pre>
+</div>
+</div>
+<div class="section" id="topics">
+<h2>Topics<a class="headerlink" href="#topics" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="git.html">Git Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="git.html#jenkins">Jenkins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="git.html#config-file">Config file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="subversion.html">Subversion Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="subversion.html#jenkins">Jenkins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subversion.html#config-file">Config file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="devel.html">Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="devel.html#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devel.html#todo">Todo</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="links">
+<h2>Links<a class="headerlink" href="#links" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Documentation:</dt>
+<dd><table border="1" class="first last docutils">
+<colgroup>
+<col width="17%" />
+<col width="83%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>devel</td>
+<td><a class="reference external" href="http://gvalkov.github.com/jenkins-autojobs">http://gvalkov.github.com/jenkins-autojobs</a></td>
+</tr>
+<tr class="row-even"><td>stable</td>
+<td><a class="reference external" href="http://packages.python.org/jenkins-autojobs">http://packages.python.org/jenkins-autojobs</a></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>Development:</dt>
+<dd><a class="reference external" href="https://github.com/gvalkov/jenkins-autojobs">https://github.com/gvalkov/jenkins-autojobs</a></dd>
+<dt>PyPi:</dt>
+<dd><a class="reference external" href="http://pypi.python.org/pypi/jenkins-autojobs">http://pypi.python.org/pypi/jenkins-autojobs</a></dd>
+</dl>
+</div>
+<div class="section" id="similar-projects">
+<h2>Similar Projects<a class="headerlink" href="#similar-projects" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="http://entagen.github.com/jenkins-build-per-branch/">jenkins-build-per-branch</a></li>
+</ul>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p><tt class="xref py py-mod docutils literal"><span class="pre">jenkins-autojobs</span></tt> is released under the terms of the <a class="reference external" href="https://raw.github.com/gvalkov/jenkins-autojobs/master/LICENSE">New BSD License</a>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction</a><ul>
+<li><a class="reference internal" href="#supported-scms">Supported SCMs</a></li>
+<li><a class="reference internal" href="#topics">Topics</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#links">Links</a></li>
+<li><a class="reference internal" href="#similar-projects">Similar Projects</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="next chapter">Installation</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             >next</a> |</li>
+        <li><a href="#">jenkins-autojobs 0.5.0</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Georgi Valkov.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

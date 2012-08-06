@@ -1,0 +1,356 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Subversion Setup &mdash; jenkins-autojobs 0.5.0</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="jenkins-autojobs 0.5.0" href="index.html" />
+    <link rel="next" title="Development" href="devel.html" />
+    <link rel="prev" title="Git Setup" href="git.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="devel.html" title="Development"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="git.html" title="Git Setup"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">jenkins-autojobs 0.5.0</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="subversion-setup">
+<h1>Subversion Setup<a class="headerlink" href="#subversion-setup" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="jenkins">
+<h2>Jenkins<a class="headerlink" href="#jenkins" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">jenkins-makejobs-svn</span></tt> script works with template jobs
+configured with the <a class="reference external" href="https://wiki.jenkins-ci.org/display/JENKINS/Subversion+Plugin">Svn SCM</a> plugin. The relevant options
+that must be set are:</p>
+<img alt="_images/svn-setup-figure.png" src="_images/svn-setup-figure.png" />
+<p>The script will take care of setting the correct branch specifier (the
+branch that the job should checkout) and the name of the local branch
+for every new job created from the template job.</p>
+</div>
+<div class="section" id="config-file">
+<span id="svnyamlconfig"></span><h2>Config file<a class="headerlink" href="#config-file" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="c1"># Jenkins location and login</span>
+<span class="l-Scalar-Plain">jenkins</span><span class="p-Indicator">:</span>  <span class="l-Scalar-Plain">http://localhost:8080</span>
+<span class="l-Scalar-Plain">username</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">None</span>  <span class="c1"># optional</span>
+<span class="l-Scalar-Plain">password</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">None</span>  <span class="c1"># optional</span>
+
+<span class="c1"># Repository urls</span>
+<span class="l-Scalar-Plain">repo</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">file:///tmp/repo/</span>
+<span class="l-Scalar-Plain">branches</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">file:///tmp/repo/branches/</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">file:///tmp/repo/experimental/</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">file:///tmp/repo/releases/</span>
+
+<span class="c1"># Repository login</span>
+<span class="l-Scalar-Plain">scm-username</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">None</span>  <span class="c1"># optional</span>
+<span class="l-Scalar-Plain">scm-password</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">None</span>  <span class="c1"># optional</span>
+
+<span class="c1"># Job to use as a template for new jobs</span>
+<span class="l-Scalar-Plain">template</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">new-job-template</span>
+
+<span class="c1"># Character with which to replace &#39;/&#39; in branch names</span>
+<span class="l-Scalar-Plain">namesep</span><span class="p-Indicator">:</span> <span class="s">&#39;-&#39;</span>
+
+<span class="c1"># Template string for new job names</span>
+<span class="c1"># The following placeholders are available:</span>
+<span class="c1"># Given a branch file:///tmp/repo/branches/feature-one</span>
+<span class="c1">#   {branch} -&gt; expands to the name of the branch (feature-one)</span>
+<span class="c1">#   {path}   -&gt; expands to the full path to the branch, relative to</span>
+<span class="c1">#               the repository root (branches/feature-one)</span>
+<span class="c1">#   {n}      -&gt; nth backreference of the branch regex</span>
+<span class="l-Scalar-Plain">namefmt</span><span class="p-Indicator">:</span> <span class="s">&#39;{branch}&#39;</span>
+
+<span class="c1"># If false, a job will never be overwritten if it exists</span>
+<span class="c1"># If true, a job will be overwritten if the new configration</span>
+<span class="c1"># differs from the old one.</span>
+<span class="l-Scalar-Plain">overwrite</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+
+<span class="c1"># State of newly created or overwritten jobs. One of:</span>
+<span class="c1">#   true       -&gt; jobs will be enabled</span>
+<span class="c1">#   false      -&gt; jobs will be disabled</span>
+<span class="c1">#   &#39;template&#39; -&gt; jobs will inherit the state of their template job</span>
+<span class="c1">#   &#39;sticky&#39;   -&gt; new jobs inherit the state of the template job -</span>
+<span class="c1">#                 overwritten jobs keep their previous state.</span>
+<span class="l-Scalar-Plain">enable</span><span class="p-Indicator">:</span> <span class="s">&#39;sticky&#39;</span>
+
+<span class="c1"># Literal substitute of strings in template job</span>
+<span class="c1"># Useful for certain plugins (eg. sidebar links)</span>
+<span class="l-Scalar-Plain">substitute</span><span class="p-Indicator">:</span>
+  <span class="s">&#39;@@JOB_NAME@@&#39;</span> <span class="p-Indicator">:</span> <span class="s">&#39;{branch}&#39;</span>
+
+<span class="c1"># List of branches to ignore (regular expressions)</span>
+<span class="l-Scalar-Plain">ignore</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;branches/.*-nobuild&#39;</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;experimental/john/.*&#39;</span>
+
+<span class="c1"># Maps branch names (regular expressions) to config dictionaries that</span>
+<span class="c1"># may overwrite any of the previously specified options. Defaults to</span>
+<span class="c1"># &quot;refs: &#39;.*&#39;&quot;.</span>
+<span class="l-Scalar-Plain">refs</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;branches/(.*)&#39;</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;releases/(.*)&#39;</span><span class="p-Indicator">:</span>
+      <span class="s">&#39;template&#39;</span><span class="p-Indicator">:</span> <span class="s">&#39;release-template&#39;</span>
+      <span class="s">&#39;namefmt&#39;</span><span class="p-Indicator">:</span>  <span class="s">&#39;release-{short}&#39;</span>
+      <span class="s">&#39;enable&#39;</span><span class="p-Indicator">:</span>   <span class="l-Scalar-Plain">false</span>
+</pre></div>
+</div>
+<p><a class="reference download internal" href="_downloads/svn-config.yaml"><tt class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">svn-config.yaml</span></tt></a></p>
+<div class="section" id="repo">
+<h3><tt class="docutils literal"><span class="pre">repo</span></tt><a class="headerlink" href="#repo" title="Permalink to this headline">¶</a></h3>
+<p>The base url for the project (not necessarily the repository root).</p>
+</div>
+<div class="section" id="branches">
+<h3><tt class="docutils literal"><span class="pre">branches</span></tt><a class="headerlink" href="#branches" title="Permalink to this headline">¶</a></h3>
+<p>Urls to list for branches that will be matchable by the <a class="reference internal" href="#refs">refs</a> option.</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">repo</span><span class="p-Indicator">:</span> <span class="s">&#39;file:///tmp/repo&#39;</span>
+<span class="l-Scalar-Plain">branches</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;file:///tmp/repo/branches/&#39;</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;file:///tmp/repo/experimental/&#39;</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;file:///tmp/repo/releases/&#39;</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">jenkins-makejobs-svn</span></tt> will list the contents of every specified url
+and strip the value of <tt class="docutils literal"><span class="pre">repo</span></tt>. The end result is a list similar to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">branches</span><span class="o">/</span><span class="n">feature</span><span class="o">-</span><span class="n">one</span>
+<span class="n">branches</span><span class="o">/</span><span class="n">feature</span><span class="o">-</span><span class="n">two</span>
+<span class="n">experimental</span><span class="o">/</span><span class="n">john</span><span class="o">/</span><span class="n">bug</span><span class="o">-</span><span class="n">one</span>
+<span class="n">releases</span><span class="o">/</span><span class="n">banana</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="namefmt">
+<h3><tt class="docutils literal"><span class="pre">namefmt</span></tt><a class="headerlink" href="#namefmt" title="Permalink to this headline">¶</a></h3>
+<p>Template string to use for job names.</p>
+<p>Given a branch <tt class="docutils literal"><span class="pre">branches/svn-bisect</span></tt>, the following table
+maps the available placeholders to their respectful values:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="35%" />
+<col width="65%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">placeholder</th>
+<th class="head">value</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">{path}</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">branches-svn-bisect</span></tt></td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">{path-orig}</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">branches/svn-bisect</span></tt></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">{branch}</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">svn-bisect</span></tt></td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">{0}</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">svn</span></tt></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">{1}</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">bisect</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Assumes that the following config:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">refs</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;branches/(.*)-(.*)&#39;</span>
+    <span class="l-Scalar-Plain">namesep</span><span class="p-Indicator">:</span> <span class="s">&#39;-&#39;</span>
+</pre></div>
+</div>
+<p>Placeholders such as <tt class="docutils literal"><span class="pre">{0}</span> <span class="pre">{1}</span> <span class="pre">{2}</span></tt> evaluate to the
+backreferences (<tt class="docutils literal"><span class="pre">\1</span> <span class="pre">\2</span> <span class="pre">\3</span></tt>) of the matching regular expression (see <a class="reference internal" href="#refs">refs</a>).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Using <tt class="docutils literal"><span class="pre">path-orig</span></tt> would most likely result in an error, since
+some of the characters allowed in branch names cannot be used for
+job names.</p>
+</div>
+</div>
+<div class="section" id="refs">
+<h3><tt class="docutils literal"><span class="pre">refs</span></tt><a class="headerlink" href="#refs" title="Permalink to this headline">¶</a></h3>
+<p>A list of regular expressions that specify the branches to process:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">refs</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;branches/feature-.*&#39;</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;branches/bug-.*&#39;</span>
+</pre></div>
+</div>
+<p>Global settings can be overwritten on a per-ref basis:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">namefmt</span><span class="p-Indicator">:</span>  <span class="s">&#39;job-{branch}&#39;</span>
+<span class="l-Scalar-Plain">template</span><span class="p-Indicator">:</span> <span class="s">&#39;template-one&#39;</span>
+
+<span class="l-Scalar-Plain">refs</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;branches/feature-.*&#39;</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;branches/bug-(.*)&#39;</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">namefmt</span><span class="p-Indicator">:</span>  <span class="s">&#39;bug-{1}&#39;</span>
+      <span class="l-Scalar-Plain">template</span><span class="p-Indicator">:</span> <span class="s">&#39;bug-template&#39;</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="39%" />
+<col width="29%" />
+<col width="32%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">ref</th>
+<th class="head">new job name</th>
+<th class="head">template</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">branches/bug-1</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">bug-bug-1</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">bug-template</span></tt></td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">branches/feature-1</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">job-feature-1</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">template-one</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Note that the <a class="reference internal" href="#namefmt">namefmt</a> setting can use backreferences from the regular
+expressions through the <tt class="docutils literal"><span class="pre">{n}</span></tt> placeholder:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">refs</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;experimental/(.*)/(.*)&#39;</span>
+</pre></div>
+</div>
+<p>Given a branch <tt class="docutils literal"><span class="pre">experimental/john/feature-one</span></tt> the placeholders will
+be expanded as:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="57%" />
+<col width="43%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">placeholder</th>
+<th class="head">value</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">{0}</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">john</span></tt></td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">{1}</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">feature-one</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Defaults to:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">refs</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;.*&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="substitute">
+<h3><tt class="docutils literal"><span class="pre">substitute</span></tt><a class="headerlink" href="#substitute" title="Permalink to this headline">¶</a></h3>
+<p>See <a class="reference internal" href="git.html#href-substitute"><em>substitute</em></a></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Subversion Setup</a><ul>
+<li><a class="reference internal" href="#jenkins">Jenkins</a></li>
+<li><a class="reference internal" href="#config-file">Config file</a><ul>
+<li><a class="reference internal" href="#repo"><tt class="docutils literal"><span class="pre">repo</span></tt></a></li>
+<li><a class="reference internal" href="#branches"><tt class="docutils literal"><span class="pre">branches</span></tt></a></li>
+<li><a class="reference internal" href="#namefmt"><tt class="docutils literal"><span class="pre">namefmt</span></tt></a></li>
+<li><a class="reference internal" href="#refs"><tt class="docutils literal"><span class="pre">refs</span></tt></a></li>
+<li><a class="reference internal" href="#substitute"><tt class="docutils literal"><span class="pre">substitute</span></tt></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="git.html"
+                        title="previous chapter">Git Setup</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="devel.html"
+                        title="next chapter">Development</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/subversion.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="devel.html" title="Development"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="git.html" title="Git Setup"
+             >previous</a> |</li>
+        <li><a href="index.html">jenkins-autojobs 0.5.0</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Georgi Valkov.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

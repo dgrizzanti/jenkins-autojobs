@@ -1,0 +1,388 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Git Setup &mdash; jenkins-autojobs 0.5.0</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="jenkins-autojobs 0.5.0" href="index.html" />
+    <link rel="next" title="Subversion Setup" href="subversion.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="subversion.html" title="Subversion Setup"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">jenkins-autojobs 0.5.0</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="git-setup">
+<h1>Git Setup<a class="headerlink" href="#git-setup" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="jenkins">
+<h2>Jenkins<a class="headerlink" href="#jenkins" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">jenkins-makejobs-git</span></tt> script works with template jobs
+configured with the <a class="reference external" href="https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin">Git SCM</a> plugin. The relevant options that must
+be set are:</p>
+<img alt="_images/git-setup-figure.png" src="_images/git-setup-figure.png" />
+<p>The script will take care of setting the correct branch specifier (the
+branch that the job should checkout) and the name of the local branch
+for every new job created from the template job.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Although the name of the local branch is always the same as the
+name of the shortref, future versions of <tt class="docutils literal"><span class="pre">jenkins-autojobs</span></tt> may
+allow further customization.</p>
+</div>
+</div>
+<div class="section" id="config-file">
+<span id="gityamlconfig"></span><h2>Config file<a class="headerlink" href="#config-file" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="c1"># Jenkins location and login</span>
+<span class="l-Scalar-Plain">jenkins</span><span class="p-Indicator">:</span>  <span class="l-Scalar-Plain">http://localhost:8080</span>
+<span class="l-Scalar-Plain">username</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">None</span>  <span class="c1"># optional</span>
+<span class="l-Scalar-Plain">password</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">None</span>  <span class="c1"># optional</span>
+
+<span class="c1"># Repository location (remote or local)</span>
+<span class="l-Scalar-Plain">repo</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">file:///tmp/project-repo/</span>
+
+<span class="c1"># Repository login</span>
+<span class="l-Scalar-Plain">scm-username</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">None</span>  <span class="c1"># optional</span>
+<span class="l-Scalar-Plain">scm-password</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">None</span>  <span class="c1"># optional</span>
+
+<span class="c1"># Job to use as a default template for new jobs</span>
+<span class="l-Scalar-Plain">template</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">new-job-template</span>
+
+<span class="c1"># Character with which to replace &#39;/&#39; in ref names</span>
+<span class="l-Scalar-Plain">namesep</span><span class="p-Indicator">:</span> <span class="s">&#39;-&#39;</span>
+
+<span class="c1"># Template string for new job names</span>
+<span class="c1"># The following placeholders are available:</span>
+<span class="c1">#   {ref}      -&gt; expands to full ref name</span>
+<span class="c1">#   {shortref} -&gt; expands to the short ref name</span>
+<span class="c1">#   {n}        -&gt; nth backreference of the ref regex</span>
+<span class="l-Scalar-Plain">namefmt</span><span class="p-Indicator">:</span> <span class="s">&#39;{shortref}&#39;</span>
+
+<span class="c1"># If false, a job will never be overwritten if it exists</span>
+<span class="c1"># If true, a job will be overwritten if the new configration</span>
+<span class="c1"># differs from the old one.</span>
+<span class="l-Scalar-Plain">overwrite</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+
+<span class="c1"># State of newly created or overwritten jobs. One of:</span>
+<span class="c1">#   true       -&gt; jobs will be enabled</span>
+<span class="c1">#   false      -&gt; jobs will be disabled</span>
+<span class="c1">#   &#39;template&#39; -&gt; jobs will inherit the state of their template job</span>
+<span class="c1">#   &#39;sticky&#39;   -&gt; new jobs inherit the state of the template job -</span>
+<span class="c1">#                 overwritten jobs keep their previous state</span>
+<span class="l-Scalar-Plain">enable</span><span class="p-Indicator">:</span> <span class="s">&#39;sticky&#39;</span>
+
+<span class="c1"># Literal substitute of strings in template job</span>
+<span class="c1"># Useful for certain plugins (eg. sidebar links)</span>
+<span class="l-Scalar-Plain">substitute</span><span class="p-Indicator">:</span>
+  <span class="s">&#39;@@JOB_NAME@@&#39;</span> <span class="p-Indicator">:</span> <span class="s">&#39;{shortref}&#39;</span>
+
+<span class="c1"># List of refs to ignore (regular expressions)</span>
+<span class="l-Scalar-Plain">ignore</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;refs/heads/feature/.*-nobuild&#39;</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;refs/heads/scratch/.*&#39;</span>
+
+<span class="c1"># Maps ref names (regular expressions) to config dictionaries that may</span>
+<span class="c1"># overwrite any of the previously specified options. Defaults to</span>
+<span class="c1"># &quot;refs: &#39;.*&#39;&quot;.</span>
+<span class="l-Scalar-Plain">refs</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;refs/heads/release/(.*)&#39;</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;refs/heads/feature/(.*)&#39;</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;refs/heads/scratch/(.*)&#39;</span><span class="p-Indicator">:</span>
+      <span class="s">&#39;template&#39;</span><span class="p-Indicator">:</span> <span class="s">&#39;scratch-template&#39;</span>
+      <span class="s">&#39;namefmt&#39;</span><span class="p-Indicator">:</span>  <span class="s">&#39;wip-{shortref}&#39;</span>
+      <span class="s">&#39;enable&#39;</span><span class="p-Indicator">:</span>   <span class="l-Scalar-Plain">false</span>
+</pre></div>
+</div>
+<p><a class="reference download internal" href="_downloads/git-config.yaml"><tt class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">git-config.yaml</span></tt></a></p>
+<div class="section" id="repo">
+<h3><tt class="docutils literal"><span class="pre">repo</span></tt><a class="headerlink" href="#repo" title="Permalink to this headline">¶</a></h3>
+<p>The location of the git repository.</p>
+<p>If this is a local directory, <tt class="docutils literal"><span class="pre">jenkins-makejobs-git</span></tt> will use <tt class="docutils literal"><span class="pre">git</span>
+<span class="pre">show-ref</span></tt> to list refs. If location is an url, <tt class="docutils literal"><span class="pre">git</span> <span class="pre">ls-remote</span></tt> will
+be used. Keep in mind that these return ref names differently - this
+is important for the <a class="reference internal" href="#refs">refs</a> option.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="c"># in a clone</span>
+<span class="nv">$ </span>git show-ref | head -5 | awk <span class="s1">&#39;{print $2}&#39;</span>
+refs/heads/master
+refs/remotes/origin/0.3-maintenance
+refs/remotes/origin/0.5-maintenance
+refs/remotes/origin/0.6-maintenance
+refs/remotes/origin/0.7-maintenance
+
+<span class="c"># remotely</span>
+<span class="nv">$ </span>git ls-remote https://github.com/mitsuhiko/flask.git | head -5 | awk <span class="s1">&#39;{print $2}&#39;</span>
+HEAD
+refs/heads/0.3-maintenance
+refs/heads/0.5-maintenance
+refs/heads/0.6-maintenance
+refs/heads/0.7-maintenance
+</pre></div>
+</div>
+</div>
+<div class="section" id="namefmt">
+<h3><tt class="docutils literal"><span class="pre">namefmt</span></tt><a class="headerlink" href="#namefmt" title="Permalink to this headline">¶</a></h3>
+<p>Template string to use for job names.</p>
+<p>Given a ref <tt class="docutils literal"><span class="pre">refs/heads/feature/one/two.three</span></tt>, the following table
+maps the available placeholders to their respectful values:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="35%" />
+<col width="65%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">placeholder</th>
+<th class="head">value</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">{shortref}</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">feature-one.two.three</span></tt></td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">{shortref-orig}</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">feature/one/two.three</span></tt></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">{ref}</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">refs-heads-feature-one-two.three</span></tt></td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">{ref-orig}</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">refs/heads/feature/one/two.three</span></tt></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">{0}</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">one</span></tt></td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">{1}</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">two.three</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Assumes that the following config:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">refs</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;refs/heads/feature/(.*)/(.*)&#39;</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">namesep</span><span class="p-Indicator">:</span> <span class="s">&#39;-&#39;</span>
+</pre></div>
+</div>
+<p>Placeholders such as <tt class="docutils literal"><span class="pre">{0}</span> <span class="pre">{1}</span> <span class="pre">{2}</span></tt> evaluate to the
+backreferences (<tt class="docutils literal"><span class="pre">\1</span> <span class="pre">\2</span> <span class="pre">\3</span></tt>) of the matching regular expression (see <a class="reference internal" href="#refs">refs</a>).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Using <tt class="docutils literal"><span class="pre">shortref-orig</span></tt> and <tt class="docutils literal"><span class="pre">ref-orig</span></tt> would most likely result
+in an error, since some of the characters allowed in branch names
+cannot be used for job names.</p>
+</div>
+</div>
+<div class="section" id="refs">
+<h3><tt class="docutils literal"><span class="pre">refs</span></tt><a class="headerlink" href="#refs" title="Permalink to this headline">¶</a></h3>
+<p>A list of regular expressions that specify which refs to process:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">refs</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;refs/heads/feature/.*&#39;</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;refs/heads/release/.*&#39;</span>
+</pre></div>
+</div>
+<p>Global settings can be overwritten on a per-ref basis:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">namefmt</span><span class="p-Indicator">:</span>  <span class="s">&#39;job-{shortref}&#39;</span>
+<span class="l-Scalar-Plain">template</span><span class="p-Indicator">:</span> <span class="s">&#39;template-one&#39;</span>
+
+<span class="l-Scalar-Plain">refs</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;refs/heads/feature/.*&#39;</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;refs/heads/release/(.*)&#39;</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">namefmt</span><span class="p-Indicator">:</span>  <span class="s">&#39;release-{1}&#39;</span>
+      <span class="l-Scalar-Plain">template</span><span class="p-Indicator">:</span> <span class="s">&#39;release-template&#39;</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="39%" />
+<col width="29%" />
+<col width="32%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">ref</th>
+<th class="head">new job name</th>
+<th class="head">template</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">refs/heads/feature/bug1</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">job-feature-bug1</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">template-one</span></tt></td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">refs/heads/release/three</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">release-three</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">release-template</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Note that the <a class="reference internal" href="#namefmt">namefmt</a> setting can use backreferences from the regular
+expressions through the <tt class="docutils literal"><span class="pre">{n}</span></tt> placeholder:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">refs</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;refs/heads/feature/(.*)/(.*)/(.*)&#39;</span>
+</pre></div>
+</div>
+<p>Given a ref <tt class="docutils literal"><span class="pre">refs/heads/feature/alpha/beta/gamma</span></tt> the placeholders
+will be expanded as:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="57%" />
+<col width="43%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">placeholder</th>
+<th class="head">value</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">{0}</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">alpha</span></tt></td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">{1}</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">beta</span></tt></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">{2}</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">gamma</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Defaults to:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">refs</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;.*&#39;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Although you can match any <tt class="docutils literal"><span class="pre">ref</span></tt> returned by <tt class="docutils literal"><span class="pre">git</span> <span class="pre">show-ref</span></tt> or
+<tt class="docutils literal"><span class="pre">git</span> <span class="pre">ls-remote</span></tt> (depending on whether the repo is local or
+remote) that does not mean that it can be used for the branchspec
+option of the Git plugin. Generally, only <tt class="docutils literal"><span class="pre">refs/heads/.*</span></tt> are
+safe. You can nevertheless use the <a class="reference internal" href="#substitute">substitute</a> option for more
+complicated setups (at the expense of automatically triggered
+builds).</p>
+</div>
+</div>
+<div class="section" id="substitute">
+<span id="href-substitute"></span><h3><tt class="docutils literal"><span class="pre">substitute</span></tt><a class="headerlink" href="#substitute" title="Permalink to this headline">¶</a></h3>
+<p>Sets text substitutions throughout all text elements of a job&#8217;s
+<tt class="docutils literal"><span class="pre">config.xml</span></tt> (this includes the body of all commands that you may
+have defined). This option is useful for plugins that cannot
+introspect the name of the branch or job (eg. <a class="reference external" href="https://wiki.jenkins-ci.org/display/JENKINS/Sidebar-Link+Plugin">Sidebar-Link</a>):</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">substitute</span><span class="p-Indicator">:</span>
+  <span class="s">&#39;@@JOB_NAME@@&#39;</span> <span class="p-Indicator">:</span> <span class="s">&#39;job-{shortref}&#39;</span>
+  <span class="s">&#39;@@REF_NAME@@&#39;</span> <span class="p-Indicator">:</span> <span class="s">&#39;ref-{shortref}&#39;</span>
+
+<span class="l-Scalar-Plain">refs</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;refs/heads/special&#39;</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">substitute</span><span class="p-Indicator">:</span>
+         <span class="s">&#39;@@STORAGE@@&#39;</span> <span class="p-Indicator">:</span> <span class="s">&#39;/storage/builds/special/&#39;</span>
+</pre></div>
+</div>
+<p>All placeholders available to <a class="reference internal" href="#namefmt">namefmt</a> are also available here.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Git Setup</a><ul>
+<li><a class="reference internal" href="#jenkins">Jenkins</a></li>
+<li><a class="reference internal" href="#config-file">Config file</a><ul>
+<li><a class="reference internal" href="#repo"><tt class="docutils literal"><span class="pre">repo</span></tt></a></li>
+<li><a class="reference internal" href="#namefmt"><tt class="docutils literal"><span class="pre">namefmt</span></tt></a></li>
+<li><a class="reference internal" href="#refs"><tt class="docutils literal"><span class="pre">refs</span></tt></a></li>
+<li><a class="reference internal" href="#substitute"><tt class="docutils literal"><span class="pre">substitute</span></tt></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="previous chapter">Installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="subversion.html"
+                        title="next chapter">Subversion Setup</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/git.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="subversion.html" title="Subversion Setup"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             >previous</a> |</li>
+        <li><a href="index.html">jenkins-autojobs 0.5.0</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Georgi Valkov.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

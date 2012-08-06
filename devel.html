@@ -1,0 +1,169 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Development &mdash; jenkins-autojobs 0.5.0</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="jenkins-autojobs 0.5.0" href="index.html" />
+    <link rel="prev" title="Subversion Setup" href="subversion.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="subversion.html" title="Subversion Setup"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">jenkins-autojobs 0.5.0</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="development">
+<h1>Development<a class="headerlink" href="#development" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="xref py py-mod docutils literal"><span class="pre">jenkins-autojobs</span></tt> test suite needs a running Jenkins
+instance, pre-configured with the scm plugins that the scripts
+support. To save you some of the trouble of doing that, there is an
+all-in-one script that will download <a class="reference external" href="http://mirrors.jenkins-ci.org/war/latest/jenkins.war">jenkins.war</a>, bundle all
+necessary plugins and start a local server (see
+<a class="reference external" href="https://github.com/gvalkov/jenkins-autojobs/blob/master/tests/bin/start-jenkins.sh">start-jenkins.sh</a>). The test suite and the helper script default to
+a Jenkins CI server listening on <tt class="docutils literal"><span class="pre">localhost:60888</span></tt>.</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> <span class="nb">cd </span>jenkins-autojobs/tests
+
+<span class="gp">#</span> start a jenkins server
+<span class="gp">$</span> bin/start-jenkins.sh
+
+<span class="gp">#</span> <span class="k">if </span>you want to gracefully shutdown the jenkins instance, either
+<span class="gp">#</span> <span class="nb">kill </span>the start-jenkins.sh process or send a 0 to localhost:60887
+<span class="gp">#</span> <span class="o">(</span>60887 is the winstone control port<span class="o">)</span>
+<span class="gp">$</span> killall start-jenkins.sh
+<span class="gp">$</span> <span class="nb">echo </span>0 | nc 127.0.0.1 60887
+</pre></div>
+</div>
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> <span class="nb">cd </span>jenkins-autojobs
+
+<span class="gp">#</span> make sure that the jenkins_autojobs package is available on
+<span class="gp">#</span> sys.path <span class="o">(</span>python setup.py develop in a virtualenv<span class="o">)</span>
+
+<span class="gp">#</span> run all tests
+<span class="gp">$</span> py.test tests
+
+<span class="gp">#</span> run only git tests
+<span class="gp">$</span> py.test tests/test_git.py
+
+<span class="gp">#</span> run all tests <span class="k">for </span>all supported versions of python
+<span class="gp">$</span> tox
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The test suite <strong>removes all jobs</strong> on the Jenkins server prior to
+running the tests.</p>
+</div>
+</div>
+<div class="section" id="todo">
+<h2>Todo<a class="headerlink" href="#todo" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Support more scm plugins (starting with mercurial, as I&#8217;m already
+advertising it in the documentation).</li>
+<li>Clean up the code. Initially these were all seperate scripts that
+didn&#8217;t reuse any code at all. Merging them made things messy.</li>
+<li>Add Jenkins/SCM authentication tests.</li>
+<li>Handle deleted branches that have been fully merged (this just
+hasn&#8217;t been a priority for me).</li>
+<li>Add Python 3 support. The source code itself should work on python
+2.7 and &gt;=3.0, but the stable version of <a class="reference external" href="http://pypi.python.org/pypi/python-jenkins">python-jenkins</a> is holding
+me back. There are plenty of python bindings for the jenkins web
+api, but I&#8217;m a little dissatisfied with all of them and have been
+thinking of writing my own.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Development</a><ul>
+<li><a class="reference internal" href="#testing">Testing</a></li>
+<li><a class="reference internal" href="#todo">Todo</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="subversion.html"
+                        title="previous chapter">Subversion Setup</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/devel.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="subversion.html" title="Subversion Setup"
+             >previous</a> |</li>
+        <li><a href="index.html">jenkins-autojobs 0.5.0</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Georgi Valkov.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
