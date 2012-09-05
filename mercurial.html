@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Subversion Setup &mdash; jenkins-autojobs 0.6.0</title>
+    <title>Mercurial Setup &mdash; jenkins-autojobs 0.6.0</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="jenkins-autojobs 0.6.0" href="index.html" />
-    <link rel="next" title="Mercurial Setup" href="mercurial.html" />
-    <link rel="prev" title="Git Setup" href="git.html" /> 
+    <link rel="next" title="Development" href="devel.html" />
+    <link rel="prev" title="Subversion Setup" href="subversion.html" /> 
   </head>
   <body>
     <div class="related">
@@ -36,10 +36,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="mercurial.html" title="Mercurial Setup"
+          <a href="devel.html" title="Development"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="git.html" title="Git Setup"
+          <a href="subversion.html" title="Subversion Setup"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">jenkins-autojobs 0.6.0</a> &raquo;</li> 
       </ul>
@@ -50,20 +50,18 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="subversion-setup">
-<h1>Subversion Setup<a class="headerlink" href="#subversion-setup" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="mercurial-setup">
+<h1>Mercurial Setup<a class="headerlink" href="#mercurial-setup" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="jenkins">
 <h2>Jenkins<a class="headerlink" href="#jenkins" title="Permalink to this headline">¶</a></h2>
-<p>The <tt class="docutils literal"><span class="pre">jenkins-makejobs-svn</span></tt> script works with template jobs
-configured with the <a class="reference external" href="https://wiki.jenkins-ci.org/display/JENKINS/Subversion+Plugin">Svn SCM</a> plugin. The relevant options
-that must be set are:</p>
-<img alt="_images/svn-setup-figure.png" src="_images/svn-setup-figure.png" />
-<p>The script will take care of setting the correct branch specifier (the
-branch that the job should checkout) and the name of the local branch
-for every new job created from the template job.</p>
+<p>The <tt class="docutils literal"><span class="pre">jenkins-makejobs-hg</span></tt> script works with template jobs configured
+with the <a class="reference external" href="https://wiki.jenkins-ci.org/display/JENKINS/Mercurial+Plugin">Mercurial SCM</a> plugin. No special configuration other than
+enabling the plugin and setting a repository location is needed. The
+script will take care of setting the branch (the branch that the job
+will checkout) for every new job created from the template job.</p>
 </div>
 <div class="section" id="config-file">
-<span id="svnyamlconfig"></span><h2>Config file<a class="headerlink" href="#config-file" title="Permalink to this headline">¶</a></h2>
+<span id="hgyamlconfig"></span><h2>Config file<a class="headerlink" href="#config-file" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="c1"># Jenkins location and login</span>
 <span class="l-Scalar-Plain">jenkins</span><span class="p-Indicator">:</span>  <span class="l-Scalar-Plain">http://localhost:8080</span>
 <span class="l-Scalar-Plain">username</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">None</span>  <span class="c1"># optional</span>
@@ -71,10 +69,6 @@ for every new job created from the template job.</p>
 
 <span class="c1"># Repository urls</span>
 <span class="l-Scalar-Plain">repo</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">file:///tmp/repo/</span>
-<span class="l-Scalar-Plain">branches</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">file:///tmp/repo/branches/</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">file:///tmp/repo/experimental/</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">file:///tmp/repo/releases/</span>
 
 <span class="c1"># Repository login</span>
 <span class="l-Scalar-Plain">scm-username</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">None</span>  <span class="c1"># optional</span>
@@ -88,10 +82,8 @@ for every new job created from the template job.</p>
 
 <span class="c1"># Template string for new job names</span>
 <span class="c1"># The following placeholders are available:</span>
-<span class="c1"># Given a branch file:///tmp/repo/branches/feature-one</span>
+<span class="c1"># Given a branch feature/one</span>
 <span class="c1">#   {branch} -&gt; expands to the name of the branch (feature-one)</span>
-<span class="c1">#   {path}   -&gt; expands to the full path to the branch, relative to</span>
-<span class="c1">#               the repository root (branches/feature-one)</span>
 <span class="c1">#   {n}      -&gt; nth backreference of the branch regex</span>
 <span class="l-Scalar-Plain">namefmt</span><span class="p-Indicator">:</span> <span class="s">&#39;{branch}&#39;</span>
 
@@ -115,43 +107,24 @@ for every new job created from the template job.</p>
 
 <span class="c1"># List of branches to ignore (regular expressions)</span>
 <span class="l-Scalar-Plain">ignore</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="s">&#39;branches/.*-nobuild&#39;</span>
-  <span class="p-Indicator">-</span> <span class="s">&#39;experimental/john/.*&#39;</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;.*-nobuild&#39;</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;scratch/.*&#39;</span>
 
 <span class="c1"># Maps branch names (regular expressions) to config dictionaries that</span>
 <span class="c1"># may overwrite any of the previously specified options. Defaults to</span>
 <span class="c1"># &quot;refs: &#39;.*&#39;&quot;.</span>
 <span class="l-Scalar-Plain">refs</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="s">&#39;branches/(.*)&#39;</span>
-  <span class="p-Indicator">-</span> <span class="s">&#39;releases/(.*)&#39;</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;feature-(.*)&#39;</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;release-(.*)&#39;</span><span class="p-Indicator">:</span>
       <span class="s">&#39;template&#39;</span><span class="p-Indicator">:</span> <span class="s">&#39;release-template&#39;</span>
-      <span class="s">&#39;namefmt&#39;</span><span class="p-Indicator">:</span>  <span class="s">&#39;release-{short}&#39;</span>
+      <span class="s">&#39;namefmt&#39;</span><span class="p-Indicator">:</span>  <span class="s">&#39;rel-{1}&#39;</span>
       <span class="s">&#39;enable&#39;</span><span class="p-Indicator">:</span>   <span class="l-Scalar-Plain">false</span>
 </pre></div>
 </div>
-<p><a class="reference download internal" href="_downloads/svn-config.yaml"><tt class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">svn-config.yaml</span></tt></a></p>
+<p><a class="reference download internal" href="_downloads/hg-config.yaml"><tt class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">hg-config.yaml</span></tt></a></p>
 <div class="section" id="repo">
 <h3><tt class="docutils literal"><span class="pre">repo</span></tt><a class="headerlink" href="#repo" title="Permalink to this headline">¶</a></h3>
-<p>The base url for the project (not necessarily the repository root).</p>
-</div>
-<div class="section" id="branches">
-<h3><tt class="docutils literal"><span class="pre">branches</span></tt><a class="headerlink" href="#branches" title="Permalink to this headline">¶</a></h3>
-<p>Urls to list for branches that will be matchable by the <a class="reference internal" href="#refs">refs</a> option.</p>
-<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">repo</span><span class="p-Indicator">:</span> <span class="s">&#39;file:///tmp/repo&#39;</span>
-<span class="l-Scalar-Plain">branches</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="s">&#39;file:///tmp/repo/branches/&#39;</span>
-  <span class="p-Indicator">-</span> <span class="s">&#39;file:///tmp/repo/experimental/&#39;</span>
-  <span class="p-Indicator">-</span> <span class="s">&#39;file:///tmp/repo/releases/&#39;</span>
-</pre></div>
-</div>
-<p><tt class="docutils literal"><span class="pre">jenkins-makejobs-svn</span></tt> will list the contents of every specified url
-and strip the value of <tt class="docutils literal"><span class="pre">repo</span></tt>. The end result is a list similar to:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">branches</span><span class="o">/</span><span class="n">feature</span><span class="o">-</span><span class="n">one</span>
-<span class="n">branches</span><span class="o">/</span><span class="n">feature</span><span class="o">-</span><span class="n">two</span>
-<span class="n">experimental</span><span class="o">/</span><span class="n">john</span><span class="o">/</span><span class="n">bug</span><span class="o">-</span><span class="n">one</span>
-<span class="n">releases</span><span class="o">/</span><span class="n">banana</span>
-</pre></div>
-</div>
+<p>Url to the mercurial repository.</p>
 </div>
 <div class="section" id="namefmt">
 <h3><tt class="docutils literal"><span class="pre">namefmt</span></tt><a class="headerlink" href="#namefmt" title="Permalink to this headline">¶</a></h3>
@@ -169,19 +142,16 @@ maps the available placeholders to their respectful values:</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">{path}</span></tt></td>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">{branch}</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">branches-svn-bisect</span></tt></td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">{path-orig}</span></tt></td>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">{branch-orig}</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">branches/svn-bisect</span></tt></td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">{branch}</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">svn-bisect</span></tt></td>
-</tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">{0}</span></tt></td>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">{0}</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">svn</span></tt></td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">{1}</span></tt></td>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">{1}</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">bisect</span></tt></td>
 </tr>
 </tbody>
@@ -196,7 +166,7 @@ maps the available placeholders to their respectful values:</p>
 backreferences (<tt class="docutils literal"><span class="pre">\1</span> <span class="pre">\2</span> <span class="pre">\3</span></tt>) of the matching regular expression (see <a class="reference internal" href="#refs">refs</a>).</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Using <tt class="docutils literal"><span class="pre">path-orig</span></tt> would most likely result in an error, since
+<p class="last">Using <tt class="docutils literal"><span class="pre">branch-orig</span></tt> would most likely result in an error, since
 some of the characters allowed in branch names cannot be used for
 job names.</p>
 </div>
@@ -205,8 +175,8 @@ job names.</p>
 <h3><tt class="docutils literal"><span class="pre">refs</span></tt><a class="headerlink" href="#refs" title="Permalink to this headline">¶</a></h3>
 <p>A list of regular expressions that specify the branches to process:</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">refs</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="s">&#39;branches/feature-.*&#39;</span>
-  <span class="p-Indicator">-</span> <span class="s">&#39;branches/bug-.*&#39;</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;feature-.*&#39;</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;bug-.*&#39;</span>
 </pre></div>
 </div>
 <p>Global settings can be overwritten on a per-ref basis:</p>
@@ -214,8 +184,8 @@ job names.</p>
 <span class="l-Scalar-Plain">template</span><span class="p-Indicator">:</span> <span class="s">&#39;template-one&#39;</span>
 
 <span class="l-Scalar-Plain">refs</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="s">&#39;branches/feature-.*&#39;</span>
-  <span class="p-Indicator">-</span> <span class="s">&#39;branches/bug-(.*)&#39;</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;feature-.*&#39;</span>
+  <span class="p-Indicator">-</span> <span class="s">&#39;alpha-(.*)&#39;</span><span class="p-Indicator">:</span>
       <span class="l-Scalar-Plain">namefmt</span><span class="p-Indicator">:</span>  <span class="s">&#39;bug-{1}&#39;</span>
       <span class="l-Scalar-Plain">template</span><span class="p-Indicator">:</span> <span class="s">&#39;bug-template&#39;</span>
 </pre></div>
@@ -233,8 +203,8 @@ job names.</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">branches/bug-1</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">bug-bug-1</span></tt></td>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">alpha-1</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">bug-alpha-1</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">bug-template</span></tt></td>
 </tr>
 <tr class="row-odd"><td><tt class="docutils literal"><span class="pre">branches/feature-1</span></tt></td>
@@ -291,11 +261,10 @@ be expanded as:</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Subversion Setup</a><ul>
+<li><a class="reference internal" href="#">Mercurial Setup</a><ul>
 <li><a class="reference internal" href="#jenkins">Jenkins</a></li>
 <li><a class="reference internal" href="#config-file">Config file</a><ul>
 <li><a class="reference internal" href="#repo"><tt class="docutils literal"><span class="pre">repo</span></tt></a></li>
-<li><a class="reference internal" href="#branches"><tt class="docutils literal"><span class="pre">branches</span></tt></a></li>
 <li><a class="reference internal" href="#namefmt"><tt class="docutils literal"><span class="pre">namefmt</span></tt></a></li>
 <li><a class="reference internal" href="#refs"><tt class="docutils literal"><span class="pre">refs</span></tt></a></li>
 <li><a class="reference internal" href="#substitute"><tt class="docutils literal"><span class="pre">substitute</span></tt></a></li>
@@ -306,14 +275,14 @@ be expanded as:</p>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="git.html"
-                        title="previous chapter">Git Setup</a></p>
+  <p class="topless"><a href="subversion.html"
+                        title="previous chapter">Subversion Setup</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="mercurial.html"
-                        title="next chapter">Mercurial Setup</a></p>
+  <p class="topless"><a href="devel.html"
+                        title="next chapter">Development</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/subversion.txt"
+    <li><a href="_sources/mercurial.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -340,10 +309,10 @@ be expanded as:</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="mercurial.html" title="Mercurial Setup"
+          <a href="devel.html" title="Development"
              >next</a> |</li>
         <li class="right" >
-          <a href="git.html" title="Git Setup"
+          <a href="subversion.html" title="Subversion Setup"
              >previous</a> |</li>
         <li><a href="index.html">jenkins-autojobs 0.6.0</a> &raquo;</li> 
       </ul>
