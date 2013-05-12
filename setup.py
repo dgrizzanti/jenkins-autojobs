@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from sys import exit
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 from os.path import dirname, join as pjoin
@@ -66,7 +67,7 @@ class PyTest(TestCommand):
     def run_tests(self):
         import pytest
         errno = pytest.main(self.test_args)
-        sys.exit(errno)
+        exit(errno)
 
 kw['cmdclass']['test'] = PyTest
 setup(**kw)
